@@ -22,10 +22,13 @@ async fn main() -> Result<()> {
         .expect("CHAT_ID must be a valid integer");
 
     // 多个用户
-    let chat_ids: Vec<i64> = std::env::var("CHAT_IDS")
-        .expect("CHAT_ID must be set")
-        .split(',').into_iter().map(|f| f.parse().expect("CHAT_ID must be a valid integer") ).collect
-        .expect("CHAT_ID must be a valid integer");
+    // let chat_ids: Vec<i64> = std::env::var("CHAT_IDS")
+    //     .expect("CHAT_ID must be set")
+    //     .split(',')
+    //     .into_iter()
+    //     .map(|f| f.parse()
+    //     .expect("CHAT_ID must be a valid integer"))
+    //     .collect::<Vec<i64>>();
 
     // 创建一个 bot 实例
     let bot = Arc::new(Bot::new(bot_token));
