@@ -1894,6 +1894,7 @@ dependencies = [
  "dotenvy",
  "futures",
  "futures-util",
+ "lazy_static",
  "rand",
  "serde",
  "serde_json",

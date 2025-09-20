@@ -1,10 +1,9 @@
 use chrono::Local;
 use tracing_subscriber::Layer;
-use tracing_telegram::TelegramLayer;
+use tracing_telegram::{TelegramLayer,teloxide::prelude::*};
 use std::sync::Arc;
-use teloxide::prelude::*;
 use tokio::time::{sleep, Duration};
-use tracing::{debug, error, info, warn, Level};
+use tracing::{debug, error, info, warn};
 use tracing_subscriber::fmt::time::LocalTime;
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt};
@@ -22,6 +21,13 @@ async fn main() -> Result<()> {
         .parse()
         .expect("CHAT_ID must be a valid integer");
 
+    // 多个用户
+    let chat_ids: Vec<i64> = std::env::var("CHAT_IDS")
+        .expect("CHAT_ID must be set")
+        .split(',').into_iter().map(|f| f.parse().expect("CHAT_ID must be a valid integer") ).collect
+        .expect("CHAT_ID must be a valid integer");
+
+    // 创建一个 bot 实例
     let bot = Arc::new(Bot::new(bot_token));
 
     // 控制台日志层
@@ -33,7 +39,9 @@ async fn main() -> Result<()> {
     // Telegram 日志层
     let telegram_layer = TelegramLayer::builder()
         .bot(bot.clone())
-        .chat_id(chat_id)
+        // .chat_id(chat_id) //单个用户
+        .chat_ids(vec![chat_id]) //多个用户
+        // .template("{emoji} {time} {msg} {level} {module} {file} {line}")
         .markdown()
         .build()
         .with_filter(LevelFilter::INFO);
@@ -76,7 +84,7 @@ async fn simulate_web_server_random(end_time: chrono::DateTime<Local>) {
     loop {
         if Local::now() >= end_time { break; }
 
-        let sleep_time = Duration::from_secs(rng.random_range(15..30)); // 延长延时
+        let sleep_time = Duration::from_secs(rng.random_range(5..30)); // 延长延时
         sleep(sleep_time).await;
 
         let endpoint = endpoints[rng.random_range(0..endpoints.len())];
@@ -103,7 +111,7 @@ async fn simulate_database_operations_random(end_time: chrono::DateTime<Local>) 
     loop {
         if Local::now() >= end_time { break; }
 
-     let sleep_time = Duration::from_secs(rng.random_range(30..50)); // 延长延时
+     let sleep_time = Duration::from_secs(rng.random_range(5..50)); // 延长延时
         sleep(sleep_time).await;
 
         let operation = operations[rng.random_range(0..operations.len())];
@@ -144,7 +152,7 @@ async fn simulate_user_activity_random(end_time: chrono::DateTime<Local>) {
         }
 
         if rng.random_bool(0.1) {
-            let session_duration = rng.random_range(300..3600);
+            let session_duration = rng.random_range(5..30);
             let pages_visited = rng.random_range(5..50);
             info!("📊 用户分析: {} 会话时长: {}秒, 浏览页面: {}", user, session_duration, pages_visited);
         }
@@ -186,7 +194,7 @@ async fn simulate_error_scenarios_random(end_time: chrono::DateTime<Local>) {
     loop {
         if Local::now() >= end_time { break; }
 
-        let sleep_time = Duration::from_secs(rng.random_range(180..300)); // 延长延时
+        let sleep_time = Duration::from_secs(rng.random_range(10..40)); // 延长延时
         sleep(sleep_time).await;
 
         let error_type = errors[rng.random_range(0..errors.len())];
