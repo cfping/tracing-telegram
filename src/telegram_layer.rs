@@ -38,8 +38,8 @@ impl TelegramSender {
                 if let Some(pm) = parse_mode {
                     req = req.parse_mode(pm);
                 }
-                if let Err(err) = req.await {
-                    eprintln!("Failed to send log to Telegram: {}", err);
+                if let Err(_) = req.await {
+                    // eprintln!("Failed to send log to Telegram: {}", err);
                 }
                 }
             }
