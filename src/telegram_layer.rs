@@ -1,5 +1,6 @@
 use chrono::Local;
 use std::sync::Arc;
+use std::time::Duration;
 
 use teloxide::prelude::*;
 use tokio::sync::mpsc;
@@ -40,6 +41,7 @@ impl TelegramSender {
                 }
                 if let Err(_) = req.await {
                     // eprintln!("Failed to send log to Telegram: {}", err);
+                    tokio::time::sleep(Duration::from_secs(60)).await; // 等待60秒后重试
                 }
                 }
             }
