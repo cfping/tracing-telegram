@@ -28,7 +28,7 @@ struct TelegramSender {
 impl TelegramSender {
     pub fn new(bot: Arc<Bot>, chat_ids: Vec<i64>) -> Self {
         //   let (ftx,frx ) = futures::channel::mpsc::channel::<(String,Option<teloxide::types::ParseMode>)>(100);
-        let (tx, mut rx) = mpsc::channel::<(String, Option<teloxide::types::ParseMode>)>(100);
+        let (tx, mut rx) = mpsc::channel::<(String, Option<teloxide::types::ParseMode>)>(32);
         let bot_clone = bot.clone();
      
         tokio::spawn(async move {
@@ -41,7 +41,6 @@ impl TelegramSender {
                 }
                 if let Err(_) = req.await {
                     // eprintln!("Failed to send log to Telegram: {}", err);
-                    tokio::time::sleep(Duration::from_secs(60)).await; // 等待60秒后重试
                 }
                 }
             }
