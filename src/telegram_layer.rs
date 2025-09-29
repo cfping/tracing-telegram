@@ -28,7 +28,7 @@ struct TelegramSender {
 impl TelegramSender {
     pub fn new(bot: Arc<Bot>, chat_ids: Vec<i64>) -> Self {
         //   let (ftx,frx ) = futures::channel::mpsc::channel::<(String,Option<teloxide::types::ParseMode>)>(100);
-        let (tx, mut rx) = mpsc::channel::<(String, Option<teloxide::types::ParseMode>)>(32);
+        let (tx, mut rx) = mpsc::channel::<(String, Option<teloxide::types::ParseMode>)>(200);
         let bot_clone = bot.clone();
      
         tokio::spawn(async move {
